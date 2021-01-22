@@ -8,6 +8,8 @@ const {
 } = require("./util/errorHandling");
 
 const productRouter = require("./services/product");
+const categoryRouter = require("./services/category");
+const reviewRouter = require("./services/review");
 
 const server = express();
 const port = process.env.PORT || 3001;
@@ -15,7 +17,13 @@ const port = process.env.PORT || 3001;
 server.use(cors());
 server.use(express.json());
 
+server.use("/review", reviewRouter);
+server.use("/category", categoryRouter);
 server.use("/product", productRouter);
+
+server.use(badRequestHandler);
+server.use(notFoundHandler);
+server.use(genericErrorHandler);
 
 database.sequelize.sync({ force: false }).then((result) => {
   server.listen(port, () => {

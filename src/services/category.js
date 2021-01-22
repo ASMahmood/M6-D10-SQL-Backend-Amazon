@@ -1,14 +1,12 @@
 const express = require("express");
-const Product = require("../util/database").Product;
 const Category = require("../util/database").Category;
-const Review = require("../util/database").Review;
 
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
   try {
-    const newProduct = await Product.create(req.body);
-    res.status(201).send(newProduct);
+    const newCategory = await Category.create(req.body);
+    res.status(201).send(newCategory);
   } catch (error) {
     console.log(error);
     next(error);
@@ -17,8 +15,8 @@ router.post("/", async (req, res, next) => {
 
 router.get("/", async (req, res, next) => {
   try {
-    const allProduct = await Product.findAll({ include: [Category, Review] });
-    res.status(200).send(allProduct);
+    const allCategory = await Category.findAll();
+    res.status(200).send(allCategory);
   } catch (error) {
     console.log(error);
     next(error);
@@ -27,10 +25,8 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
   try {
-    const singleProduct = await Product.findByPk(req.params.id, {
-      include: [Category, Review],
-    });
-    res.status(200).send(singleProduct);
+    const singleCategory = await Category.findByPk(req.params.id);
+    res.status(200).send(singleCategory);
   } catch (error) {
     console.log(error);
     next(error);
@@ -39,11 +35,11 @@ router.get("/:id", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
-    const alteredProduct = await Product.update(req.body, {
+    const alteredCategory = await Category.update(req.body, {
       where: { id: req.params.id },
       returning: true,
     });
-    res.send(alteredProduct);
+    res.send(alteredCategory);
   } catch (error) {
     console.log(error);
     next(error);
@@ -52,7 +48,7 @@ router.put("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   try {
-    await Product.destroy({
+    await Category.destroy({
       where: { id: req.params.id },
     });
     res.send("Product Deleted");

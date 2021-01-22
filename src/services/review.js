@@ -1,14 +1,13 @@
 const express = require("express");
-const Product = require("../util/database").Product;
-const Category = require("../util/database").Category;
 const Review = require("../util/database").Review;
+const Product = require("../util/database").Product;
 
 const router = express.Router();
 
 router.post("/", async (req, res, next) => {
   try {
-    const newProduct = await Product.create(req.body);
-    res.status(201).send(newProduct);
+    const newReview = await Review.create(req.body);
+    res.status(201).send(newReview);
   } catch (error) {
     console.log(error);
     next(error);
@@ -17,8 +16,8 @@ router.post("/", async (req, res, next) => {
 
 router.get("/", async (req, res, next) => {
   try {
-    const allProduct = await Product.findAll({ include: [Category, Review] });
-    res.status(200).send(allProduct);
+    const allReview = await Review.findAll({ include: [Product] });
+    res.status(200).send(allReview);
   } catch (error) {
     console.log(error);
     next(error);
@@ -27,10 +26,10 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
   try {
-    const singleProduct = await Product.findByPk(req.params.id, {
-      include: [Category, Review],
+    const singleReview = await Review.findByPk(req.params.id, {
+      include: [Product],
     });
-    res.status(200).send(singleProduct);
+    res.status(200).send(singleReview);
   } catch (error) {
     console.log(error);
     next(error);
@@ -39,11 +38,11 @@ router.get("/:id", async (req, res, next) => {
 
 router.put("/:id", async (req, res, next) => {
   try {
-    const alteredProduct = await Product.update(req.body, {
+    const alteredReview = await Review.update(req.body, {
       where: { id: req.params.id },
       returning: true,
     });
-    res.send(alteredProduct);
+    res.send(alteredReview);
   } catch (error) {
     console.log(error);
     next(error);
@@ -52,10 +51,10 @@ router.put("/:id", async (req, res, next) => {
 
 router.delete("/:id", async (req, res, next) => {
   try {
-    await Product.destroy({
+    await Review.destroy({
       where: { id: req.params.id },
     });
-    res.send("Product Deleted");
+    res.send("Review Deleted");
   } catch (error) {
     console.log(error);
     next(error);
