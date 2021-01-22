@@ -1,5 +1,6 @@
 const express = require("express");
 const Category = require("../util/database").Category;
+const Product = require("../util/database").Product;
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.post("/", async (req, res, next) => {
 
 router.get("/", async (req, res, next) => {
   try {
-    const allCategory = await Category.findAll();
+    const allCategory = await Category.findAll({ include: [Product] });
     res.status(200).send(allCategory);
   } catch (error) {
     console.log(error);
@@ -25,7 +26,9 @@ router.get("/", async (req, res, next) => {
 
 router.get("/:id", async (req, res, next) => {
   try {
-    const singleCategory = await Category.findByPk(req.params.id);
+    const singleCategory = await Category.findByPk(req.params.id, {
+      include: [Product],
+    });
     res.status(200).send(singleCategory);
   } catch (error) {
     console.log(error);
